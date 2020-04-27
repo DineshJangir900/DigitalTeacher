@@ -3,21 +3,32 @@
     package="com.example.digitalteacher">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".application.DigitalTeacherApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/iapp"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/iapp"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".subjects.Notice"></activity>
-        <activity android:name=".VideoUploadation" />
-        <activity android:name=".userProfile" />
         <activity
-            android:name=".HomeScreen"
+            android:name=".activity.HomeScreenActivity"
             android:label="@string/title_activity_home_screen" />
-        <activity android:name=".GoogleSignIn" />
+        <activity
+            android:name=".activity.NotesActivity"
+            android:parentActivityName=".activity.HomeScreenActivity" />
+        <activity
+            android:name=".activity.OsActivity"
+            android:parentActivityName=".activity.HomeScreenActivity" />
+        <activity
+            android:name=".activity.CppActivity"
+            android:parentActivityName=".activity.HomeScreenActivity" />
+        <activity
+            android:name=".activity.DsaActivity"
+            android:parentActivityName=".activity.HomeScreenActivity" />
+        <activity android:name=".activity.GoogleSignInActicity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

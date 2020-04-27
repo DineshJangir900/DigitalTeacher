@@ -1,5 +1,6 @@
-package com.example.digitalteacher;
+package com.example.digitalteacher.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,12 +10,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.digitalteacher.R;
+import com.example.digitalteacher.utility.CustomProgressDialog;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -29,7 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class GoogleSignIn extends AppCompatActivity {
+public class GoogleSignInActicity extends AppCompatActivity {
     private static final String TAG = "GoogleSignIn";
     private static final int RC_SIGN_IN = 0;
     private FirebaseAuth mAuth;
@@ -37,6 +39,7 @@ public class GoogleSignIn extends AppCompatActivity {
     private com.google.android.gms.common.SignInButton signInButton;
     private GoogleApiClient mGoogleApiClient;
     SharedPreferences sharedPreferences;
+    CustomProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +70,7 @@ public class GoogleSignIn extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 signInButton.setVisibility(View.VISIBLE);
                 if (user != null) {
-                    startActivity(new Intent(getApplicationContext(), HomeScreen.class));
+                    startActivity(new Intent(getApplicationContext(), HomeScreenActivity.class));
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     Uri personPhoto = user.getPhotoUrl();
                     sharedPreferences = getSharedPreferences("email", Context.MODE_PRIVATE);
@@ -89,6 +92,9 @@ public class GoogleSignIn extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 signIn();
+                progressDialog = new CustomProgressDialog(GoogleSignInActicity.this);
+                progressDialog.show("Authenticating","Please wait...");
+
             }
         });
 
@@ -105,12 +111,19 @@ public class GoogleSignIn extends AppCompatActivity {
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
+
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
+
+
+
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
 
+                progressDialog.close();
+                Toast.makeText(GoogleSignInActicity.this, "You have been successfully registered and logged in.",
+                        Toast.LENGTH_SHORT).show();
             } else {
                 // Google Sign In failed, update UI appropriately
                 // ...
@@ -147,14 +160,10 @@ public class GoogleSignIn extends AppCompatActivity {
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(GoogleSignIn.this, "Authentication failed.",
+                            Toast.makeText(GoogleSignInActicity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-
-
     }
-
-
 }
