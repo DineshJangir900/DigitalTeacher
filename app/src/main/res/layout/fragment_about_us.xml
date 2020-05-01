@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.ui.aboutUs.AboutUsFragment"
+    android:orientation="vertical"
+    android:layout_margin="20dp"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Appliction Developer :"
+        android:fontFamily="@font/raleway_regular"
+        android:textSize="25sp"
+        android:textColor="@color/colorPrimary"/>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Parikshit\nFrom Bkbiet"
+        android:textSize="20sp"
+        android:fontFamily="@font/raleway_regular"/>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Developer Contact :"
+        android:fontFamily="@font/raleway_regular"
+        android:textSize="25sp"
+        android:textColor="@color/colorPrimary"/>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="par16may@gmail.com"
+        android:textSize="20sp"
+        android:fontFamily="@font/raleway_regular"/>
+
+
+
+</LinearLayout>

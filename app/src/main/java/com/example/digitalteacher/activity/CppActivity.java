@@ -12,7 +12,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -41,7 +43,6 @@ import java.util.Locale;
 
 public class CppActivity extends AppCompatActivity {
     private ActivityCppBinding binding;
-
     private Uri selectData;
     private StorageReference storageReference;
     private DatabaseReference demoRef;
@@ -51,8 +52,8 @@ public class CppActivity extends AppCompatActivity {
     private List<CppModelClass> arrayList;
     private String currentDate;
     private CppAdapter cppAdapter;
-
     private boolean checkBack = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,38 +125,82 @@ public class CppActivity extends AppCompatActivity {
 
         });
 
-
-
-
         binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                arrayList.clear();
-                arrayList = new ArrayList<>();
-
-                demoRef = DigitalTeacherApplication.getFirebaseDBInstance().child("cppUploads");
-                demoRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                            CppModelClass cppModelClass = new CppModelClass();
-                            cppModelClass = postSnapshot.getValue(CppModelClass.class);
-                            arrayList.add(cppModelClass);
-                        }
-                        Collections.reverse(arrayList);
-                        cppAdapter = new CppAdapter(CppActivity.this,binding.dsaRecyclerView, getApplicationContext() ,arrayList);
-                        binding.dsaRecyclerView.setAdapter(cppAdapter);
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-
-                });
+                firebaseRetrive();
                 binding.swipeRefresh.setRefreshing(false);
             }
         });
 
+        binding.searchET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if(!editable.toString().isEmpty()){
+                    search(editable.toString());
+                }else{
+                    search(" ");
+                    firebaseRetrive();
+                }
+            }
+        });
+
+    }
+    private void search(String s){
+        arrayList.clear();
+        arrayList = new ArrayList<>();
+
+        demoRef = DigitalTeacherApplication.getFirebaseDBInstance().child("cppUploads");
+        demoRef.orderByChild("topicName").equalTo(s).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    CppModelClass cppModelClass = new CppModelClass();
+                    cppModelClass = postSnapshot.getValue(CppModelClass.class);
+                    arrayList.add(cppModelClass);
+                }
+                progressDialog.close();
+                Collections.reverse(arrayList);
+                cppAdapter = new CppAdapter(CppActivity.this,binding.dsaRecyclerView, getApplicationContext() ,arrayList);
+                binding.dsaRecyclerView.setAdapter(cppAdapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+    }
+
+    private void firebaseRetrive(){
+        arrayList.clear();
+        arrayList = new ArrayList<>();
+
+        demoRef = DigitalTeacherApplication.getFirebaseDBInstance().child("cppUploads");
+        demoRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    CppModelClass cppModelClass = new CppModelClass();
+                    cppModelClass = postSnapshot.getValue(CppModelClass.class);
+                    arrayList.add(cppModelClass);
+                }
+                Collections.reverse(arrayList);
+                cppAdapter = new CppAdapter(CppActivity.this,binding.dsaRecyclerView, getApplicationContext() ,arrayList);
+                binding.dsaRecyclerView.setAdapter(cppAdapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
     }
 
     private void selectFile() {

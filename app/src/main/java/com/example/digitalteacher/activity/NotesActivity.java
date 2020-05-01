@@ -157,6 +157,7 @@ public class NotesActivity extends AppCompatActivity {
     }
 
 
+
     private void uploadFile() {
         progressDialog = new CustomProgressDialog(this);
         progressDialog.show("Uploading file...","please wait");

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.digitalteacher.R;
+import com.example.digitalteacher.activity.ui.aboutUs.AboutUsFragment;
 import com.example.digitalteacher.activity.ui.profile.ProfileFragment;
 import com.example.digitalteacher.activity.ui.home.HomeFragment;
 import com.example.digitalteacher.databinding.ActivityHomeScreenBinding;
@@ -44,6 +45,10 @@ public class HomeScreenActivity extends AppCompatActivity {
                     break;
                 case R.id.navigation_home:
                     fragment = new HomeFragment();
+                    loadFragment(fragment);
+                    break;
+                case R.id.navigation_aboutUs:
+                    fragment = new AboutUsFragment();
                     loadFragment(fragment);
                     break;
 

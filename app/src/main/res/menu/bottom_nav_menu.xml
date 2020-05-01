@@ -10,6 +10,9 @@
         android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_account_circle_black_24dp"
         android:title="Profile" />
-
+    <item
+        android:id="@+id/navigation_aboutUs"
+        android:icon="@drawable/ic_import_contacts_black_24dp"
+        android:title="About Us" />
 
 </menu>

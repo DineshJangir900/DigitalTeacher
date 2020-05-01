@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,14 +14,13 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
-import com.example.digitalteacher.adapter.OsAdapter;
+import com.example.digitalteacher.adapter.DsaAdapter;
 import com.example.digitalteacher.application.DigitalTeacherApplication;
-import com.example.digitalteacher.databinding.ActivityOsBinding;
-import com.example.digitalteacher.model.CppModelClass;
-import com.example.digitalteacher.model.OsModelClass;
+import com.example.digitalteacher.databinding.ActivityDsaBinding;
+import com.example.digitalteacher.model.DsaModelClass;
 import com.example.digitalteacher.utility.CustomProgressDialog;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,7 +31,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,25 +38,25 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class OsActivity extends AppCompatActivity {
-    private ActivityOsBinding binding;
-
+public class DsaActivity extends AppCompatActivity {
+    private ActivityDsaBinding binding;
     private Uri selectData;
     private StorageReference storageReference;
     private DatabaseReference demoRef;
     private CustomProgressDialog progressDialog;
     private String email;
     private String url,fileName1;
-    private List<OsModelClass> arrayList;
+    private List<DsaModelClass> arrayList;
     private String currentDate;
-    private OsAdapter osAdapter;
+    private  DsaAdapter dsaAdapter;
     private boolean checkBack = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityOsBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        setTitle("Operating System");
+        binding = ActivityDsaBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+        setTitle("Data Structure and Algorithms");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
@@ -96,39 +93,33 @@ public class OsActivity extends AppCompatActivity {
         email = result.getString("email", "Data not found");
 
         binding.dsaRecyclerView.setHasFixedSize(true);
-        binding.dsaRecyclerView.setLayoutManager(new LinearLayoutManager(OsActivity.this));
+        binding.dsaRecyclerView.setLayoutManager(new LinearLayoutManager(DsaActivity.this));
 
         progressDialog = new CustomProgressDialog(this);
         progressDialog.setCancelable();
         progressDialog.show("Loading Data...","please wait...");
 
         arrayList = new ArrayList<>();
-        firebaseRetrive();
-        demoRef = DigitalTeacherApplication.getFirebaseDBInstance().child("osUploads");
+        demoRef = DigitalTeacherApplication.getFirebaseDBInstance().child("dsaUploads");
         demoRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    OsModelClass osModelClass = new OsModelClass();
-                    osModelClass = postSnapshot.getValue(OsModelClass.class);
-                    arrayList.add(osModelClass);
+                    DsaModelClass dsaModelClass = new DsaModelClass();
+                    dsaModelClass = postSnapshot.getValue(DsaModelClass.class);
+                    arrayList.add(dsaModelClass);
                 }
-
-                Collections.reverse(arrayList);
-                osAdapter = new OsAdapter(OsActivity.this,binding.dsaRecyclerView, getApplicationContext() ,arrayList);
-                binding.dsaRecyclerView.setAdapter(osAdapter);
                 progressDialog.close();
-
+                Collections.reverse(arrayList);
+                dsaAdapter = new DsaAdapter(DsaActivity.this,binding.dsaRecyclerView, getApplicationContext() ,arrayList);
+                binding.dsaRecyclerView.setAdapter(dsaAdapter);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-
         });
-
-
-
 
         binding.swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -162,58 +153,56 @@ public class OsActivity extends AppCompatActivity {
 
     }
 
-    private void search(String s){
-        arrayList.clear();
-        arrayList = new ArrayList<>();
 
-        demoRef = DigitalTeacherApplication.getFirebaseDBInstance().child("osUploads");
-        demoRef.orderByChild("topicName").equalTo(s).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    OsModelClass osModelClass = new OsModelClass();
-                    osModelClass = postSnapshot.getValue(OsModelClass.class);
-                    arrayList.add(osModelClass);
-                }
-
-                Collections.reverse(arrayList);
-                osAdapter = new OsAdapter(OsActivity.this,binding.dsaRecyclerView, getApplicationContext() ,arrayList);
-                binding.dsaRecyclerView.setAdapter(osAdapter);
-
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-
-        });
-
-    }
 
     private void firebaseRetrive(){
         arrayList.clear();
         arrayList = new ArrayList<>();
 
-        demoRef = DigitalTeacherApplication.getFirebaseDBInstance().child("osUploads");
+        demoRef = DigitalTeacherApplication.getFirebaseDBInstance().child("dsaUploads");
         demoRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    OsModelClass osModelClass = new OsModelClass();
-                    osModelClass = postSnapshot.getValue(OsModelClass.class);
-                    arrayList.add(osModelClass);
+                    DsaModelClass dsaModelClass = new DsaModelClass();
+                    dsaModelClass = postSnapshot.getValue(DsaModelClass.class);
+                    arrayList.add(dsaModelClass);
                 }
-
                 Collections.reverse(arrayList);
-                osAdapter = new OsAdapter(OsActivity.this,binding.dsaRecyclerView, getApplicationContext() ,arrayList);
-                binding.dsaRecyclerView.setAdapter(osAdapter);
-
+                dsaAdapter = new DsaAdapter(DsaActivity.this,binding.dsaRecyclerView, getApplicationContext() ,arrayList);
+                binding.dsaRecyclerView.setAdapter(dsaAdapter);
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
+        });
 
+    }
+
+    private void search(String s){
+        arrayList.clear();
+        arrayList = new ArrayList<>();
+
+        demoRef = DigitalTeacherApplication.getFirebaseDBInstance().child("dsaUploads");
+        demoRef.orderByChild("topicName").equalTo(s).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    DsaModelClass dsaModelClass = new DsaModelClass();
+                    dsaModelClass = postSnapshot.getValue(DsaModelClass.class);
+                    arrayList.add(dsaModelClass);
+                }
+                Collections.reverse(arrayList);
+                dsaAdapter = new DsaAdapter(DsaActivity.this,binding.dsaRecyclerView, getApplicationContext() ,arrayList);
+                binding.dsaRecyclerView.setAdapter(dsaAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
         });
     }
 
@@ -232,20 +221,21 @@ public class OsActivity extends AppCompatActivity {
             progressDialog.show("Uploading file...","please wait");
             fileName1 = System.currentTimeMillis()+"";
             storageReference = DigitalTeacherApplication.getStorageReferenceInstance();
-            storageReference.child("Uploads").child("os").child(fileName1).putFile(selectData)
+            storageReference.child("Uploads").child("Dsa").child(fileName1).putFile(selectData)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            storageReference.child("Uploads").child("os").child(fileName1).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            storageReference.child("Uploads").child("Dsa").child(fileName1).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     Uri downloadUrl = uri;
+                                    Log.d("ccc",""+downloadUrl);
                                     url = downloadUrl.toString();
-                                    demoRef = DigitalTeacherApplication.getFirebaseDBInstance().child("osUploads");
+                                    demoRef = DigitalTeacherApplication.getFirebaseDBInstance().child("dsaUploads");
                                     demoRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                            OsModelClass dsa = new OsModelClass();
+                                            DsaModelClass dsa = new DsaModelClass();
                                             dsa.setFileName(fileName1);
                                             dsa.setFileUrl(url);
                                             dsa.setUserEmail(email);
@@ -293,7 +283,7 @@ public class OsActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 90 && resultCode == RESULT_OK && data != null) {
             selectData = data.getData();
-            binding.selectFileTV.setText("A file is Selected :" + data.getData().getLastPathSegment());
+           binding.selectFileTV.setText("A file is Selected :" + data.getData().getLastPathSegment());
         } else {
             Toast.makeText(getApplicationContext(), "Please select a file", Toast.LENGTH_SHORT)
                     .show();
@@ -319,5 +309,6 @@ public class OsActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
 }
 

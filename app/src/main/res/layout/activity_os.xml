@@ -7,6 +7,14 @@
     tools:context=".activity.OsActivity"
     android:orientation="vertical">
 
+    <EditText
+        android:id="@+id/searchET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search"
+        android:fontFamily="@font/raleway_regular"
+        />
+
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"

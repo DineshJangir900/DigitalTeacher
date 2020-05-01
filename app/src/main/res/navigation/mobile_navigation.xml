@@ -14,12 +14,12 @@
     <fragment
         android:id="@+id/navigation_dashboard"
         android:name="com.example.digitalteacher.activity.ui.profile.ProfileFragment"
-        android:label="@string/title_dashboard"
+        android:label="Profile"
         tools:layout="@layout/fragment_profile" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.digitalteacher.activity.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_aboutUs"
+        android:name="com.example.digitalteacher.activity.ui.aboutUs.AboutUsFragment"
+        android:label="AboutUs"
+        tools:layout="@layout/fragment_about_us" />
 </navigation>
